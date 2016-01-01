@@ -69,12 +69,15 @@ class ShellFilter(object):
 
 class DataChain(object):
     def __init__(self, dfilters, 
-                 working_dir=tempfile.mkdtemp(dir=TEMP_DIR),
+                 working_dir=None,
                  printopt=False):
         self.dfilters = dfilters
         self.printopt = printopt
-        self.working_dir = working_dir
-        print working_dir
+        if not working_dir:
+            self.working_dir = tempfile.mkdtemp(dir=TEMP_DIR),
+        else: 
+            self.working_dir = working_dir
+        #print working_dir
 
     def run(self, input_fname, output_fname):
         read_fname = input_fname        
@@ -83,7 +86,7 @@ class DataChain(object):
             input_basename = os.path.basename(input_fname)
             write_basename = input_basename + "." + appendage
             write_fname = os.path.join(self.working_dir, write_basename)
-            print write_fname
+            #print write_fname
             dfilter.run(read_fname, write_fname)
             read_fname = write_fname
 
@@ -102,6 +105,8 @@ class DataChain(object):
             #    raise ValueError("DataChain printopt set to something other than True, False or \"Native\"")
         
         shutil.copyfile(write_fname, output_fname)    
+        #if self.printout:
+        #    subprocess.check_call('cat ' + output_fname, shell=True)
 
     def run_test(self, input_fname, output_fname, nlines=1000):
         input_basename = os.path.basename(input_fname)
