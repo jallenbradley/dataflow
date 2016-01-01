@@ -1,6 +1,10 @@
+#! /workplace/dataflow/df_python/bin/python
 import argparse
 import re
 import os
+
+# templates
+map_template_fname = '/workplace/dataflow/src/dataflow/templates/map_template.py'
 
 # general replacements
 input_regex = regex = re.compile('.*(\$\{INPUT\}).*')
@@ -10,7 +14,7 @@ working_dir_regex = regex = re.compile('.*(\$\{WORKING_DIR\}).*')
 # map specific replacements
 mapper_lambda_regex = regex = re.compile('.*(\$\{MAPPER_LAMBDA\}).*')
 mapper_def_regex = regex = re.compile('.*(\$\{MAPPER_DEF\}).*')
-map_template_fname = '/workplace/dataflow/src/dataflow/templates/map_template.py'
+
 
 def process_general_template(args, template_fname):
     abs_input = os.path.abspath(args.input)
@@ -55,7 +59,7 @@ if __name__=="__main__":
    parser.add_argument("chain_file", type=str, help="code file name")
    parser.add_argument("-wd", "--working_dir", type=str, help="working directory for datachain")
    parser.add_argument("-t", "--test", action="store_true", help="run chain in test mode")
-   parser.add_argument("--run", action="store_true", help="run the chain")
+   #parser.add_argument("--run", action="store_true", help="run the chain")
 
    subparsers = parser.add_subparsers(help='different chain structures')
    
