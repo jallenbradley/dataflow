@@ -1,4 +1,4 @@
-import dflib
+import flow
 
 input_file  = ${INPUT}
 output_file = ${OUTPUT}
