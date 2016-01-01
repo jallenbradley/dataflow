@@ -9,7 +9,7 @@ ${MAPPER_DEF}def mapper_func(line):
 ${MAPPER_DEF}    out_str = 
 ${MAPPER_DEF}    return out_str
 
-mfilter = flow.MapperFilter(trans=mapper_func, name="mapper")
+mfilter = flow.MapperFilter(trans=mapper_func, name="map")
 
 dflist = [ 
            mfilter
