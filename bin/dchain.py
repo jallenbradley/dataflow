@@ -2,6 +2,7 @@
 import argparse
 import re
 import os
+import subprocess
 
 # templates
 map_template_fname = '/workplace/dataflow/src/dataflow/templates/map_template.py'
@@ -15,12 +16,15 @@ working_dir_regex = regex = re.compile('.*(\$\{WORKING_DIR\}).*')
 # map replacements
 mapper_lambda_regex = regex = re.compile('.*(\$\{MAPPER_LAMBDA\}).*')
 mapper_def_regex = regex = re.compile('.*(\$\{MAPPER_DEF\}).*')
+
 # reducer replacements
 reducer_lambda_regex = regex = re.compile('.*(\$\{REDUCER_LAMBDA\}).*')
 reducer_def_regex = regex = re.compile('.*(\$\{REDUCER_DEF\}).*')
 reducer_key_getter_def_regex = regex = re.compile('.*(\$\{REDUCER_KEY_GETTER_DEF\}).*')
 reducer_key_getter_lambda_regex = regex = re.compile('.*(\$\{REDUCER_KEY_GETTER_LAMBDA\}).*')
 
+def make_executable(fname):
+    subprocess.check_call("chmod 755 " + fname, shell=True)
 
 def gen_replace(args, template_fname):
     abs_input = os.path.abspath(args.input)
@@ -72,12 +76,9 @@ def red_replace(args, map_replaced_text):
             else:
                 line = line.replace("${REDUCER_DEF}", "")
         if reducer_key_getter_lambda_regex.match(line):
-            print "YAY"
             if args.key_getter:
                 line = line.replace("${REDUCER_KEY_GETTER_LAMBDA}", args.reducer)
             else:
-                print "YAY"
-                print line
                 continue #deleting this line if reducer is not passed
         if reducer_key_getter_def_regex.match(line):
             if args.key_getter:
@@ -116,7 +117,7 @@ if __name__=="__main__":
    
    map_parser = subparsers.add_parser('map', help='single mapper structure')
    map_parser.add_argument("--mapper", default='', help='python function to use as mapper') 
-   map_parser.set_defaults(func=mapred_makechain)
+   map_parser.set_defaults(func=map_makechain)
 
    mapred_parser = subparsers.add_parser('mapred', help='map-reduce structure')
    mapred_parser.add_argument("--mapper", default='', help='python function to use as mapper') 
@@ -126,6 +127,7 @@ if __name__=="__main__":
 
    args = parser.parse_args()
    args.func(args)
+   make_executable(args.chain_file)
 
 
 

@@ -1,3 +1,4 @@
+#! /workplace/dataflow/df_python/bin/python
 import flow
 
 input_file  = ${INPUT}
@@ -14,7 +15,7 @@ ${REDUCER_DEF}def reducer_func(line_iter):
 ${REDUCER_DEF}    out_str = 
 ${REDUCER_DEF}    return out_str
 
-${REDUCER_KEY_GETTER_DEF}reducer_key_getter = lamda x: x.strip().split("\t")[0]
+${REDUCER_KEY_GETTER_DEF}reducer_key_getter = lambda x: x.strip().split("\t")[0]
 reducer_key_getter = ${REDUCER_KEY_GETTER_LAMBDA}
 
 mapper_filter  = flow.MapperFilter(trans=mapper_func, name="map")

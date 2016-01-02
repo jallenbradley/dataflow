@@ -8,15 +8,24 @@ TEMP_DIR = '/env/dataflow/tmp'
 
 
 class MapperFilter(object):
-    def __init__(self, trans, name=None, printopt=False):
+    def __init__(self, trans, name=None, printopt=False, header_row=False):
         self.trans = trans
         self.name = name
         self.printopt = printopt
+        self.header_row = header_row
 
     def run(self, read_fname, write_fname):
         with open(read_fname) as in_fobj, open(write_fname, 'w') as out_fobj:
-            for line in in_fobj:
-                output = self.trans(line)
+            for ii, line in enumerate(in_fobj):
+                if self.header_row:
+                    if ii==0:
+                        header_row = line
+                        continue
+                    else:
+                        output = self.trans(line, header_row)
+                else:
+                    output = self.trans(line)
+
                 if output:
                     out_fobj.write(str(output) + '\n')                    
 
